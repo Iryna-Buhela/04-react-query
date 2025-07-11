@@ -10,7 +10,10 @@ interface MovieResponse {
 
 const API_TOKEN = import.meta.env.VITE_TMDB_TOKEN;
 
-export default async function fetchMovies(query: string): Promise<Movie[]> {
+export default async function fetchMovies(
+  query: string,
+  page: number = 1
+): Promise<MovieResponse> {
   const response = await axios.get<MovieResponse>(
     `https://api.themoviedb.org/3/search/movie`,
     {
@@ -18,7 +21,7 @@ export default async function fetchMovies(query: string): Promise<Movie[]> {
         query,
         include_adult: false,
         language: "en-US",
-        page: 1,
+        page,
       },
       headers: {
         Authorization: `Bearer ${API_TOKEN}`,
@@ -26,5 +29,5 @@ export default async function fetchMovies(query: string): Promise<Movie[]> {
     }
   );
 
-  return response.data.results;
+  return response.data;
 }
